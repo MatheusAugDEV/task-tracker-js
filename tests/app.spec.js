@@ -30,10 +30,15 @@ for (const viewport of [
     await addTask(page, "Estudar JavaScript");
     await addTask(page, "Enviar relatório");
     await expect(page.locator(".task-count")).toHaveText("3 tarefas");
+    const progress = page.getByRole("progressbar", { name: "Porcentagem de tarefas concluídas" });
+    await expect(progress).toHaveAttribute("aria-valuenow", "0");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 
     await page.locator(".task-checkbox").nth(0).check();
     await page.getByRole("button", { name: "Pendentes" }).click();
+    await expect(progress).toHaveAttribute("aria-valuenow", "33");
+    await expect(page.locator("#pending-total")).toHaveText("2");
+    await expect(page.locator("#completed-total")).toHaveText("1");
     await expect(page.locator(".task-title")).toHaveText([
       "Estudar JavaScript",
       "Enviar relatório",
@@ -45,6 +50,7 @@ for (const viewport of [
     await page.locator(".task-checkbox").focus();
     await page.keyboard.press("Space");
     await expect(page.getByText("Nenhuma tarefa pendente.")).toBeVisible();
+    await expect(progress).toHaveAttribute("aria-valuenow", "100");
 
     await page.getByRole("button", { name: "Concluídas" }).click();
     await expect(page.locator(".task-title")).toHaveText([

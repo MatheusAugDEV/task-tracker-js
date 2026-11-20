@@ -3,7 +3,12 @@ const titleInput = document.querySelector("#task-title");
 const message = document.querySelector("#form-message");
 const taskList = document.querySelector("#task-list");
 const emptyState = document.querySelector("#empty-state");
+const emptyMessage = document.querySelector("#empty-message");
 const taskCount = document.querySelector("#task-count");
+const completionProgress = document.querySelector("#completion-progress");
+const completionPercent = document.querySelector("#completion-percent");
+const pendingTotal = document.querySelector("#pending-total");
+const completedTotal = document.querySelector("#completed-total");
 const filterButtons = document.querySelectorAll("[data-filter]");
 
 const storageKey = "task-tracker.tasks";
@@ -257,13 +262,21 @@ function renderTasks() {
 
   emptyState.hidden = visibleTasks.length > 0;
   if (tasks.length === 0) {
-    emptyState.textContent = "Sua lista está vazia. Adicione sua primeira tarefa acima.";
+    emptyMessage.textContent = "Sua lista está vazia. Adicione sua primeira tarefa acima.";
   } else if (activeFilter === "pending") {
-    emptyState.textContent = "Nenhuma tarefa pendente.";
+    emptyMessage.textContent = "Nenhuma tarefa pendente.";
   } else if (activeFilter === "completed") {
-    emptyState.textContent = "Nenhuma tarefa concluída.";
+    emptyMessage.textContent = "Nenhuma tarefa concluída.";
   }
   taskCount.textContent = tasks.length === 1 ? "1 tarefa" : `${tasks.length} tarefas`;
+
+  const completedCount = tasks.filter((task) => task.completed).length;
+  const percent = tasks.length ? Math.round((completedCount / tasks.length) * 100) : 0;
+  completionProgress.setAttribute("aria-valuenow", String(percent));
+  completionProgress.style.setProperty("--progress", `${percent}%`);
+  completionPercent.textContent = `${percent}%`;
+  completedTotal.textContent = completedCount;
+  pendingTotal.textContent = tasks.length - completedCount;
 
   for (const button of filterButtons) {
     button.setAttribute("aria-pressed", String(button.dataset.filter === activeFilter));
