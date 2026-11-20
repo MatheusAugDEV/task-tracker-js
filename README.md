@@ -29,4 +29,12 @@ Depois acesse <http://localhost:8000>.
 
 ## Testes
 
-Este repositório ainda não contém testes automatizados. A verificação manual pode ser feita no navegador: estado vazio, cadastro pelo botão e Enter, título vazio ou com espaços, edição e cancelamento, exclusão com confirmação, título longo em uma tela estreita, conclusão e reabertura pelo mouse e teclado, persistência após recarga, carregamento de tarefas antigas e filtros por status.
+Instale as dependências e o navegador Chromium do Playwright e rode a suíte:
+
+```sh
+npm install
+npx playwright install chromium
+npm test
+```
+
+Os testes verificam cadastro, edição, exclusão, filtros, conclusão, acessibilidade por teclado, persistência após recarga, formato antigo dos dados e tarefas duplicadas em listas filtradas.

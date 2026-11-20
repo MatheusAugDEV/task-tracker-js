@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "@playwright/test": "^1.65.1"
+  },
+  "scripts": {
+    "test": "playwright test"
+  },
+  "name": "task-tracker-js",
+  "version": "1.0.0",
+  "private": "true",
+  "description": "Lista de tarefas simples feita com HTML, CSS e JavaScript"
+}
