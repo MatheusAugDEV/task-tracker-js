@@ -26,9 +26,9 @@ h1 { margin: 0; color: #17243a; font-size: clamp(2rem, 7vw, 2.75rem); letter-spa
 h2 { margin: 0; color: #202b3c; font-size: 1rem; font-weight: 700; }
 label { display: block; margin: 20px 0 8px; color: #475467; font-size: .9rem; font-weight: 600; }
 .form-row { display: flex; gap: 10px; }
-input { min-width: 0; flex: 1; height: 48px; border: 1px solid #cfd7e3; border-radius: 9px; padding: 0 14px; color: #202b3c; font: inherit; }
-input::placeholder { color: #98a2b3; }
-input:focus-visible { border-color: #4265db; outline: 3px solid rgb(66 101 219 / 18%); }
+input:not([type="checkbox"]) { min-width: 0; flex: 1; height: 48px; border: 1px solid #cfd7e3; border-radius: 9px; padding: 0 14px; color: #202b3c; font: inherit; }
+input:not([type="checkbox"])::placeholder { color: #98a2b3; }
+input:not([type="checkbox"]):focus-visible { border-color: #4265db; outline: 3px solid rgb(66 101 219 / 18%); }
 button { min-height: 48px; border: 0; border-radius: 9px; padding: 0 17px; background: #3157c8; color: #fff; font: inherit; font-weight: 650; cursor: pointer; transition: background .15s ease, transform .15s ease; }
 button:hover { background: #2548af; }
 button:active { transform: translateY(1px); }
@@ -41,6 +41,12 @@ button:focus-visible { outline: 3px solid rgb(66 101 219 / 35%); outline-offset:
 .empty-state { margin: 20px 0 0; border: 1px dashed #d5dce7; border-radius: 10px; padding: 18px; color: #667085; font-size: .92rem; line-height: 1.5; text-align: center; }
 .task-list { display: grid; gap: 10px; margin: 20px 0 0; padding: 0; list-style: none; }
 .task-item { overflow-wrap: anywhere; border: 1px solid #e6eaf0; border-radius: 10px; padding: 15px 16px; color: #344054; line-height: 1.55; }
+.task-label { display: flex; align-items: center; gap: 12px; margin: 0; color: inherit; font-size: inherit; font-weight: inherit; cursor: pointer; }
+.task-checkbox { width: 18px; height: 18px; flex: 0 0 auto; margin: 0; accent-color: #3157c8; cursor: pointer; }
+.task-checkbox:focus-visible { outline: 3px solid rgb(66 101 219 / 30%); outline-offset: 3px; }
+.task-title { min-width: 0; }
+.task-item.is-completed { border-color: #d6deea; background: #f8fafc; }
+.task-item.is-completed .task-title { color: #7a8496; text-decoration: line-through; text-decoration-thickness: 1.5px; }
 
 @media (max-width: 520px) {
   body { padding: 40px 16px; }

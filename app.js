@@ -6,6 +6,8 @@ const emptyState = document.querySelector("#empty-state");
 const taskCount = document.querySelector("#task-count");
 
 const storageKey = "task-tracker.tasks";
+const storageWarning =
+  "A alteração foi feita, mas não foi possível salvá-la. Ela pode sumir ao recarregar a página.";
 const tasks = [];
 
 function loadTasks() {
@@ -14,11 +16,18 @@ function loadTasks() {
     if (!savedTasks) return;
 
     const parsedTasks = JSON.parse(savedTasks);
-    if (
-      Array.isArray(parsedTasks) &&
-      parsedTasks.every((task) => task && typeof task.title === "string")
-    ) {
-      tasks.push(...parsedTasks);
+    if (Array.isArray(parsedTasks)) {
+      const validTasks = parsedTasks.every(
+        (task) => task && typeof task.title === "string",
+      );
+      if (!validTasks) return;
+
+      tasks.push(
+        ...parsedTasks.map((task) => ({
+          title: task.title,
+          completed: task.completed === true,
+        })),
+      );
     }
   } catch {
     // Dados ausentes, inválidos ou armazenamento indisponível não impedem o uso.
@@ -37,10 +46,31 @@ function saveTasks() {
 function renderTasks() {
   taskList.replaceChildren();
 
-  for (const task of tasks) {
+  for (const [index, task] of tasks.entries()) {
     const item = document.createElement("li");
-    item.className = "task-item";
-    item.textContent = task.title;
+    item.className = task.completed ? "task-item is-completed" : "task-item";
+
+    const label = document.createElement("label");
+    label.className = "task-label";
+
+    const checkbox = document.createElement("input");
+    checkbox.className = "task-checkbox";
+    checkbox.type = "checkbox";
+    checkbox.id = `task-${index}`;
+    checkbox.checked = task.completed;
+    checkbox.addEventListener("change", () => {
+      task.completed = checkbox.checked;
+      item.classList.toggle("is-completed", task.completed);
+      message.textContent = saveTasks() ? "" : storageWarning;
+    });
+
+    const title = document.createElement("span");
+    title.className = "task-title";
+    title.textContent = task.title;
+
+    label.htmlFor = checkbox.id;
+    label.append(checkbox, title);
+    item.append(label);
     taskList.append(item);
   }
 
@@ -59,14 +89,13 @@ form.addEventListener("submit", (event) => {
     return;
   }
 
-  tasks.push({ title });
+  tasks.push({ title, completed: false });
   message.textContent = "";
   titleInput.removeAttribute("aria-invalid");
   form.reset();
   renderTasks();
   if (!saveTasks()) {
-    message.textContent =
-      "Tarefa adicionada, mas não foi possível salvá-la. Ela pode sumir ao recarregar a página.";
+    message.textContent = storageWarning;
   }
   titleInput.focus();
 });

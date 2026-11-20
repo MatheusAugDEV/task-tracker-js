@@ -6,11 +6,13 @@ Aplicação simples de lista de tarefas feita com HTML, CSS e JavaScript puro.
 
 - Exibe uma mensagem quando a lista está vazia.
 - Cadastra tarefas pelo botão **Adicionar tarefa** ou pela tecla Enter.
+- Permite concluir e reabrir tarefas pelo controle de seleção, que também pode ser usado pelo teclado.
+- Mantém o contador com o total de tarefas, concluídas ou não.
 - Remove espaços no começo e no fim do título e informa quando o campo está vazio.
 - Mostra o título como texto na lista, limpa o campo e devolve o foco para ele.
 - Adapta o formulário para telas estreitas e permite que títulos longos quebrem linha.
 
-As tarefas ficam guardadas no `localStorage` do navegador e são carregadas ao abrir ou recarregar a página. Se os dados salvos estiverem inválidos, a aplicação inicia com uma lista vazia. Se o navegador bloquear a gravação, a tarefa continua visível durante a sessão, mas pode sumir ao recarregar.
+As tarefas e seus estados de conclusão ficam guardados no `localStorage` do navegador e são carregados ao abrir ou recarregar a página. Tarefas salvas antes do campo de conclusão são carregadas como pendentes. Se os dados salvos estiverem inválidos, a aplicação inicia com uma lista vazia. Se o navegador bloquear a gravação, a alteração continua visível durante a sessão, mas pode sumir ao recarregar.
 
 ## Como abrir
 
@@ -24,4 +26,4 @@ Depois acesse <http://localhost:8000>.
 
 ## Testes
 
-Este repositório ainda não contém testes automatizados. A verificação manual pode ser feita no navegador: estado vazio, cadastro pelo botão e Enter, título vazio ou com espaços, e um título longo em uma tela estreita.
+Este repositório ainda não contém testes automatizados. A verificação manual pode ser feita no navegador: estado vazio, cadastro pelo botão e Enter, título vazio ou com espaços, título longo em uma tela estreita, conclusão e reabertura pelo mouse e teclado, persistência após recarga e carregamento de tarefas antigas.
