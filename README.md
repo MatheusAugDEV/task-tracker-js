@@ -10,7 +10,7 @@ Aplicação simples de lista de tarefas feita com HTML, CSS e JavaScript puro.
 - Mostra o título como texto na lista, limpa o campo e devolve o foco para ele.
 - Adapta o formulário para telas estreitas e permite que títulos longos quebrem linha.
 
-As tarefas ficam em memória enquanto a página está aberta; recarregar a página reinicia a lista.
+As tarefas ficam guardadas no `localStorage` do navegador e são carregadas ao abrir ou recarregar a página. Se os dados salvos estiverem inválidos, a aplicação inicia com uma lista vazia. Se o navegador bloquear a gravação, a tarefa continua visível durante a sessão, mas pode sumir ao recarregar.
 
 ## Como abrir
 

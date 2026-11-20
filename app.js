@@ -5,7 +5,34 @@ const taskList = document.querySelector("#task-list");
 const emptyState = document.querySelector("#empty-state");
 const taskCount = document.querySelector("#task-count");
 
+const storageKey = "task-tracker.tasks";
 const tasks = [];
+
+function loadTasks() {
+  try {
+    const savedTasks = localStorage.getItem(storageKey);
+    if (!savedTasks) return;
+
+    const parsedTasks = JSON.parse(savedTasks);
+    if (
+      Array.isArray(parsedTasks) &&
+      parsedTasks.every((task) => task && typeof task.title === "string")
+    ) {
+      tasks.push(...parsedTasks);
+    }
+  } catch {
+    // Dados ausentes, inválidos ou armazenamento indisponível não impedem o uso.
+  }
+}
+
+function saveTasks() {
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(tasks));
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 function renderTasks() {
   taskList.replaceChildren();
@@ -37,6 +64,10 @@ form.addEventListener("submit", (event) => {
   titleInput.removeAttribute("aria-invalid");
   form.reset();
   renderTasks();
+  if (!saveTasks()) {
+    message.textContent =
+      "Tarefa adicionada, mas não foi possível salvá-la. Ela pode sumir ao recarregar a página.";
+  }
   titleInput.focus();
 });
 
@@ -47,4 +78,5 @@ titleInput.addEventListener("input", () => {
   }
 });
 
+loadTasks();
 renderTasks();
