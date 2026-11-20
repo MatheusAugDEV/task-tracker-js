@@ -1,35 +1,30 @@
 # Task Tracker
 
-Aplicação simples de lista de tarefas feita com HTML, CSS e JavaScript puro.
+Este é um projeto de portfólio que fiz para praticar HTML, CSS e JavaScript no curso de ADS. Com ele, posso cadastrar tarefas, editar e excluir cada item, marcar o que já concluí e filtrar a lista por status. A página funciona em celular e desktop.
 
-## O que funciona
+## Demo
 
-- Exibe uma mensagem quando a lista está vazia.
-- Cadastra tarefas pelo botão **Adicionar tarefa** ou pela tecla Enter.
-- Edita o título na própria linha; salva com Enter ou pelo botão, cancela com Esc ou pelo botão.
-- Exclui tarefas com confirmação, preservando as outras tarefas mesmo quando têm títulos iguais.
-- Permite concluir e reabrir tarefas pelo controle de seleção, que também pode ser usado pelo teclado.
-- Filtra a lista por **Todas**, **Pendentes** ou **Concluídas**, com controles acessíveis por teclado.
-- Mantém o contador com o total de tarefas, concluídas ou não.
-- Remove espaços no começo e no fim do título e informa quando o campo está vazio.
-- Mostra o título como texto na lista, limpa o campo e devolve o foco para ele.
-- Adapta o formulário para telas estreitas e permite que títulos longos quebrem linha.
-
-As tarefas e seus estados de conclusão ficam guardados no `localStorage` do navegador e são carregados ao abrir ou recarregar a página. A lista abre no filtro **Todas**; os filtros afetam apenas a visualização, e o contador continua mostrando o total. Uma lista vazia e um filtro sem resultados têm mensagens diferentes. Tarefas salvas antes do campo de conclusão são carregadas como pendentes. Se os dados salvos estiverem inválidos, a aplicação inicia com uma lista vazia. Se o navegador bloquear a gravação, a alteração continua visível durante a sessão, mas pode sumir ao recarregar.
+https://matheusaugdev.github.io/task-tracker-js/
 
 ## Como abrir
 
-Abra `index.html` no navegador ou inicie um servidor local na pasta do projeto:
+Posso abrir o arquivo `index.html` direto no navegador. Para usar um servidor local, executo na pasta do projeto:
 
 ```sh
 python3 -m http.server 8000
 ```
 
-Depois acesse <http://localhost:8000>.
+Depois acesso <http://localhost:8000>.
+
+## Como funciona
+
+No `app.js`, o array `tasks` guarda os objetos da lista enquanto a página está aberta. Cada objeto tem `title` e `completed`. A função `renderTasks()` lê esse array, aplica o filtro ativo e cria os itens da tela; o título entra como texto com `textContent`. Quando a lista muda, `saveTasks()` transforma o array em JSON e grava no `localStorage`. Na próxima abertura, `loadTasks()` lê o JSON, monta os objetos novamente e a primeira renderização mostra as tarefas salvas.
+
+Uma decisão técnica que posso explicar é manter `tasks` como a fonte dos dados e tratar os filtros apenas como uma forma de visualizar essa lista. Assim, o contador continua mostrando o total e concluir um item numa visão filtrada atualiza o mesmo objeto que será salvo.
 
 ## Testes
 
-Instale as dependências e o navegador Chromium do Playwright e rode a suíte:
+Instalo as dependências e o Chromium usado pelo Playwright e rodo os testes de navegador:
 
 ```sh
 npm install
@@ -37,4 +32,4 @@ npx playwright install chromium
 npm test
 ```
 
-Os testes verificam cadastro, edição, exclusão, filtros, conclusão, acessibilidade por teclado, persistência após recarga, formato antigo dos dados e tarefas duplicadas em listas filtradas.
+A suíte cobre cadastro, edição, exclusão, filtros, conclusão, navegação pelo teclado, recarga, dados antigos com apenas `title` e títulos repetidos numa lista filtrada. Também roda o fluxo principal em uma janela estreita e em desktop.
