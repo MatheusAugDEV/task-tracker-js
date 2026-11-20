@@ -11,6 +11,7 @@ const storageWarning =
   "A alteração foi feita, mas não foi possível salvá-la. Ela pode sumir ao recarregar a página.";
 const tasks = [];
 let activeFilter = "all";
+let editingTask = null;
 
 function matchesActiveFilter(task) {
   if (activeFilter === "pending") return !task.completed;
@@ -89,7 +90,96 @@ function renderTasks() {
 
     label.htmlFor = checkbox.id;
     label.append(checkbox, title);
-    item.append(label);
+
+    const row = document.createElement("div");
+    row.className = "task-row";
+    row.append(label);
+
+    if (editingTask === task) {
+      title.hidden = true;
+      checkbox.setAttribute("aria-label", task.title);
+
+      const editor = document.createElement("div");
+      editor.className = "task-editor";
+
+      const editorForm = document.createElement("form");
+      editorForm.className = "task-editor-form";
+      editorForm.noValidate = true;
+
+      const editorInput = document.createElement("input");
+      editorInput.className = "task-editor-input";
+      editorInput.type = "text";
+      editorInput.id = `edit-task-${index}`;
+      editorInput.value = task.title;
+      editorInput.setAttribute("aria-label", `Editar título: ${task.title}`);
+
+      const error = document.createElement("p");
+      error.className = "task-editor-error";
+      error.id = `edit-error-${index}`;
+      error.setAttribute("aria-live", "polite");
+      editorInput.setAttribute("aria-describedby", error.id);
+
+      const saveButton = document.createElement("button");
+      saveButton.className = "editor-button editor-button-save";
+      saveButton.type = "submit";
+      saveButton.textContent = "Salvar";
+
+      const cancelButton = document.createElement("button");
+      cancelButton.className = "editor-button editor-button-cancel";
+      cancelButton.type = "button";
+      cancelButton.textContent = "Cancelar";
+
+      function closeEditor() {
+        editingTask = null;
+        renderTasks();
+        document.querySelector(`#edit-button-${index}`)?.focus();
+      }
+
+      editorForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const updatedTitle = editorInput.value.trim();
+        if (!updatedTitle) {
+          error.textContent = "Digite um título para salvar.";
+          editorInput.setAttribute("aria-invalid", "true");
+          editorInput.focus();
+          return;
+        }
+
+        task.title = updatedTitle;
+        editingTask = null;
+        message.textContent = saveTasks() ? "" : storageWarning;
+        renderTasks();
+        document.querySelector(`#edit-button-${index}`)?.focus();
+      });
+
+      editorForm.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closeEditor();
+        }
+      });
+      cancelButton.addEventListener("click", closeEditor);
+
+      editorForm.append(editorInput, saveButton, cancelButton);
+      editor.append(editorForm, error);
+      row.append(editor);
+    } else {
+      const editButton = document.createElement("button");
+      editButton.className = "task-action-button task-edit-button";
+      editButton.type = "button";
+      editButton.id = `edit-button-${index}`;
+      editButton.textContent = "Editar";
+      editButton.setAttribute("aria-label", `Editar tarefa ${index + 1}: ${task.title}`);
+      editButton.addEventListener("click", () => {
+        editingTask = task;
+        renderTasks();
+        document.querySelector(`#edit-task-${index}`)?.focus();
+      });
+      row.append(editButton);
+    }
+
+    item.append(row);
     taskList.append(item);
   }
 
