@@ -4,11 +4,19 @@ const message = document.querySelector("#form-message");
 const taskList = document.querySelector("#task-list");
 const emptyState = document.querySelector("#empty-state");
 const taskCount = document.querySelector("#task-count");
+const filterButtons = document.querySelectorAll("[data-filter]");
 
 const storageKey = "task-tracker.tasks";
 const storageWarning =
   "A alteração foi feita, mas não foi possível salvá-la. Ela pode sumir ao recarregar a página.";
 const tasks = [];
+let activeFilter = "all";
+
+function matchesActiveFilter(task) {
+  if (activeFilter === "pending") return !task.completed;
+  if (activeFilter === "completed") return task.completed;
+  return true;
+}
 
 function loadTasks() {
   try {
@@ -45,8 +53,10 @@ function saveTasks() {
 
 function renderTasks() {
   taskList.replaceChildren();
+  const visibleTasks = tasks.filter(matchesActiveFilter);
 
-  for (const [index, task] of tasks.entries()) {
+  for (const task of visibleTasks) {
+    const index = tasks.indexOf(task);
     const item = document.createElement("li");
     item.className = task.completed ? "task-item is-completed" : "task-item";
 
@@ -59,9 +69,18 @@ function renderTasks() {
     checkbox.id = `task-${index}`;
     checkbox.checked = task.completed;
     checkbox.addEventListener("change", () => {
+      const checkboxHadFocus = document.activeElement === checkbox;
       task.completed = checkbox.checked;
       item.classList.toggle("is-completed", task.completed);
       message.textContent = saveTasks() ? "" : storageWarning;
+      renderTasks();
+
+      if (checkboxHadFocus) {
+        const focusTarget = matchesActiveFilter(task)
+          ? document.querySelector(`#task-${index}`)
+          : document.querySelector(`[data-filter="${activeFilter}"]`);
+        focusTarget?.focus();
+      }
     });
 
     const title = document.createElement("span");
@@ -74,8 +93,26 @@ function renderTasks() {
     taskList.append(item);
   }
 
-  emptyState.hidden = tasks.length > 0;
+  emptyState.hidden = visibleTasks.length > 0;
+  if (tasks.length === 0) {
+    emptyState.textContent = "Sua lista está vazia. Adicione sua primeira tarefa acima.";
+  } else if (activeFilter === "pending") {
+    emptyState.textContent = "Nenhuma tarefa pendente.";
+  } else if (activeFilter === "completed") {
+    emptyState.textContent = "Nenhuma tarefa concluída.";
+  }
   taskCount.textContent = tasks.length === 1 ? "1 tarefa" : `${tasks.length} tarefas`;
+
+  for (const button of filterButtons) {
+    button.setAttribute("aria-pressed", String(button.dataset.filter === activeFilter));
+  }
+}
+
+for (const button of filterButtons) {
+  button.addEventListener("click", () => {
+    activeFilter = button.dataset.filter;
+    renderTasks();
+  });
 }
 
 form.addEventListener("submit", (event) => {

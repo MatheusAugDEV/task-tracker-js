@@ -41,6 +41,11 @@
           <h2 id="list-title">Sua lista</h2>
           <span id="task-count" class="task-count">0 tarefas</span>
         </div>
+        <div class="filter-controls" role="group" aria-label="Filtrar tarefas por status">
+          <button class="filter-button" type="button" data-filter="all" aria-pressed="true">Todas</button>
+          <button class="filter-button" type="button" data-filter="pending" aria-pressed="false">Pendentes</button>
+          <button class="filter-button" type="button" data-filter="completed" aria-pressed="false">Concluídas</button>
+        </div>
         <p id="empty-state" class="empty-state">Sua lista está vazia. Adicione sua primeira tarefa acima.</p>
         <ul id="task-list" class="task-list" aria-live="polite"></ul>
       </section>
