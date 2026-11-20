@@ -7,6 +7,7 @@ Aplicação simples de lista de tarefas feita com HTML, CSS e JavaScript puro.
 - Exibe uma mensagem quando a lista está vazia.
 - Cadastra tarefas pelo botão **Adicionar tarefa** ou pela tecla Enter.
 - Edita o título na própria linha; salva com Enter ou pelo botão, cancela com Esc ou pelo botão.
+- Exclui tarefas com confirmação, preservando as outras tarefas mesmo quando têm títulos iguais.
 - Permite concluir e reabrir tarefas pelo controle de seleção, que também pode ser usado pelo teclado.
 - Filtra a lista por **Todas**, **Pendentes** ou **Concluídas**, com controles acessíveis por teclado.
 - Mantém o contador com o total de tarefas, concluídas ou não.
@@ -28,4 +29,4 @@ Depois acesse <http://localhost:8000>.
 
 ## Testes
 
-Este repositório ainda não contém testes automatizados. A verificação manual pode ser feita no navegador: estado vazio, cadastro pelo botão e Enter, título vazio ou com espaços, edição e cancelamento, título longo em uma tela estreita, conclusão e reabertura pelo mouse e teclado, persistência após recarga, carregamento de tarefas antigas e filtros por status.
+Este repositório ainda não contém testes automatizados. A verificação manual pode ser feita no navegador: estado vazio, cadastro pelo botão e Enter, título vazio ou com espaços, edição e cancelamento, exclusão com confirmação, título longo em uma tela estreita, conclusão e reabertura pelo mouse e teclado, persistência após recarga, carregamento de tarefas antigas e filtros por status.

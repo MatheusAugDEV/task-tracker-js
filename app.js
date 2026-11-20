@@ -12,6 +12,7 @@ const storageWarning =
 const tasks = [];
 let activeFilter = "all";
 let editingTask = null;
+let deletingTask = null;
 
 function matchesActiveFilter(task) {
   if (activeFilter === "pending") return !task.completed;
@@ -164,7 +165,62 @@ function renderTasks() {
       editorForm.append(editorInput, saveButton, cancelButton);
       editor.append(editorForm, error);
       row.append(editor);
+    } else if (deletingTask === task) {
+      const confirmation = document.createElement("div");
+      confirmation.className = "task-delete-confirmation";
+      confirmation.setAttribute("role", "group");
+      confirmation.setAttribute("aria-label", `Confirmar exclusão: ${task.title}`);
+
+      const prompt = document.createElement("span");
+      prompt.className = "task-delete-prompt";
+      prompt.textContent = `Excluir “${task.title}”?`;
+
+      const confirmButton = document.createElement("button");
+      confirmButton.className = "editor-button editor-button-delete";
+      confirmButton.type = "button";
+      confirmButton.id = `confirm-delete-${index}`;
+      confirmButton.textContent = "Excluir";
+
+      const cancelButton = document.createElement("button");
+      cancelButton.className = "editor-button editor-button-cancel";
+      cancelButton.type = "button";
+      cancelButton.id = `cancel-delete-${index}`;
+      cancelButton.textContent = "Cancelar";
+
+      function cancelDeletion() {
+        deletingTask = null;
+        renderTasks();
+        document.querySelector(`#delete-button-${index}`)?.focus();
+      }
+
+      confirmButton.addEventListener("click", () => {
+        const visibleTasksBeforeDelete = tasks.filter(matchesActiveFilter);
+        const visibleIndex = visibleTasksBeforeDelete.indexOf(task);
+        const taskIndex = tasks.indexOf(task);
+        if (taskIndex < 0) return;
+
+        tasks.splice(taskIndex, 1);
+        deletingTask = null;
+        if (editingTask === task) editingTask = null;
+        message.textContent = saveTasks() ? "" : storageWarning;
+        renderTasks();
+
+        const nextVisibleTask =
+          visibleTasksBeforeDelete[visibleIndex + 1] ??
+          visibleTasksBeforeDelete[visibleIndex - 1];
+        const focusTarget = nextVisibleTask
+          ? document.querySelector(`#edit-button-${tasks.indexOf(nextVisibleTask)}`)
+          : document.querySelector(`[data-filter="${activeFilter}"]`);
+        focusTarget?.focus();
+      });
+
+      cancelButton.addEventListener("click", cancelDeletion);
+      confirmation.append(prompt, confirmButton, cancelButton);
+      row.append(confirmation);
     } else {
+      const actions = document.createElement("div");
+      actions.className = "task-actions";
+
       const editButton = document.createElement("button");
       editButton.className = "task-action-button task-edit-button";
       editButton.type = "button";
@@ -172,11 +228,27 @@ function renderTasks() {
       editButton.textContent = "Editar";
       editButton.setAttribute("aria-label", `Editar tarefa ${index + 1}: ${task.title}`);
       editButton.addEventListener("click", () => {
+        deletingTask = null;
         editingTask = task;
         renderTasks();
         document.querySelector(`#edit-task-${index}`)?.focus();
       });
-      row.append(editButton);
+
+      const deleteButton = document.createElement("button");
+      deleteButton.className = "task-action-button task-delete-button";
+      deleteButton.type = "button";
+      deleteButton.id = `delete-button-${index}`;
+      deleteButton.textContent = "Excluir";
+      deleteButton.setAttribute("aria-label", `Excluir tarefa ${index + 1}: ${task.title}`);
+      deleteButton.addEventListener("click", () => {
+        editingTask = null;
+        deletingTask = task;
+        renderTasks();
+        document.querySelector(`#cancel-delete-${index}`)?.focus();
+      });
+
+      actions.append(editButton, deleteButton);
+      row.append(actions);
     }
 
     item.append(row);

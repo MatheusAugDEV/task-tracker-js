@@ -55,8 +55,13 @@ button:focus-visible { outline: 3px solid rgb(66 101 219 / 35%); outline-offset:
 .task-item.is-completed { border-color: #d6deea; background: #f8fafc; }
 .task-item.is-completed .task-title { color: #7a8496; text-decoration: line-through; text-decoration-thickness: 1.5px; }
 .task-action-button, .editor-button { width: auto; min-height: 38px; padding: 0 12px; font-size: .875rem; }
+.task-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .task-edit-button { background: #edf1f8; color: #3157c8; }
 .task-edit-button:hover { background: #dfe7f8; }
+.task-delete-button, .editor-button-delete { background: #fff1f0; color: #b42318; }
+.task-delete-button:hover, .editor-button-delete:hover { background: #ffe1df; }
+.task-delete-confirmation { display: flex; flex: 1; flex-wrap: wrap; align-items: center; gap: 8px; }
+.task-delete-prompt { flex: 1 1 auto; font-size: .875rem; }
 .task-editor { flex: 1; min-width: 0; }
 .task-editor-form { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .task-editor-input { min-width: 0; flex: 1; height: 40px; border: 1px solid #cfd7e3; border-radius: 8px; padding: 0 10px; color: #202b3c; font: inherit; }
@@ -74,6 +79,8 @@ button:focus-visible { outline: 3px solid rgb(66 101 219 / 35%); outline-offset:
   .filter-button { width: auto; flex: 1 1 auto; padding-inline: 8px; }
   .task-row { align-items: flex-start; }
   .task-action-button { width: auto; flex: 0 0 auto; }
+  .task-actions { justify-content: flex-end; }
+  .task-delete-confirmation { justify-content: flex-end; }
   .task-editor-form { flex-wrap: wrap; }
   .task-editor-input { flex-basis: 100%; }
   .editor-button { width: auto; flex: 1; }
